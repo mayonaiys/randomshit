@@ -1,0 +1,33 @@
+.my-custom-scrollbar {
+    position: relative;
+    max-height: 500px;
+    overflow: auto;
+    }
+    
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+#body {
+    background-color: black;
+    max-height: 100%;
+}
+
+/*Curseur*/
+#banner:hover, #meme:hover {
+    cursor: pointer;
+}
+
+#meme {
+    border-width:7px;
+    border-style:solid;
+    border-color:yellow;
+}
+
+/*Footer*/
+#foot {
+    text-align: center;
+    color : white;
+    margin-top: 40px;
+    font-size: 70%;
+}

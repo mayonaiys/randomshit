@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>RandomShit</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="images/icon.png">
+    </head>
+    <body id="body">
+        <div class="container-fluid">
+            <br>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <img  id="banner" src="images/banner.png" class="img-fluid" alt="banner" height="200" width="700">
+                    </div>
+                    <div class="col-md-2 offset-md-1">
+                        <div class="dropdown show">
+                            <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown link
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                <form method="post" class="px-4 py-3" action="src/controller.php?function=login">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" name="mail" placeholder="Entrez votre email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="Entrez votre mot de passe">
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Se connecter</button>
+                                </form>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="src/viewregistration.php">Vous êtes nouveau ? Créez un compte!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                </div>
+                <div class="row justify-content-center">
+                </div>
+
+                <div class="row justify-content-center">
+                    <img id="meme" src="images/click.png" class="img-fluid" alt="Click me">
+                </div>
+
+                <br>
+                <div class="row justify-content-center">
+                    <input class="btn btn-warning" type="submit" value="Meme précédent">
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <footer>
+        <div id="foot">
+            <p>2019-2020 - RandomShit</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</html>

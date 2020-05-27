@@ -25,7 +25,7 @@ function wMode(){
     });
 }
 
-//Request
+//Requete image random
 function ajaxRequest(type,url,callback){
     let request = new XMLHttpRequest();
     request.open(type,url);

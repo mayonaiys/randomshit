@@ -23,7 +23,7 @@
                     <input type="text" class="form-control" name="login" placeholder="Entrez votre pseudonyme">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email</label>
+                    <label for="exampleInputEmail1">Adresse mail</label>
                     <input type="email" class="form-control" name="mail" placeholder="Entrez votre adresse mail">
                 </div>
                 <div class="form-group">
@@ -34,7 +34,7 @@
                 </div>
                 <small id="emailHelp" class="form-text text-muted">Vos informations restent confidentielles.</small>
                 <br>
-                <button type="submit" class="btn btn-primary">Se connecter</button>
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
             </form>
         </div>
     </div>

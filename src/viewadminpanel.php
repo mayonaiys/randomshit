@@ -51,9 +51,10 @@
             <form action="controller.php?function=uploadMeme" method="post" enctype="multipart/form-data">
                 Ajouter un meme* :
                 <input type="file" name="fileToUpload" id="fileToUpload">
-                <input type="submit" value="Upload Image" name="submit">
+                <input type="submit" id="upload" value="Upload Image" name="submit">
             </form>
             <small>*Une approbation des administrateurs sera requise.</small>
+            <section id="errors" class="container alert alert-danger" style="display: none"></section>
             <br>
         </div>
     </body>

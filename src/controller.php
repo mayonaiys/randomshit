@@ -39,13 +39,31 @@ function register(){
     $bdd = connexbdd('pgsql:dbname=randomshit;host=localhost;port=5432', 'postgres', 'passwordbdd');
     if(isset($_POST['login']) && isset($_POST['mail']) && isset($_POST['password']) && isset($_POST['passwordrepeat'])){
         if($_POST['password'] == $_POST['passwordrepeat']){
-            $query = "SELECT COUNT(*) as nb FROM utilisateur";
-            $result = $bdd->query($query);
-            $id = $result->fetch()['nb'] + 1;
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $add = $bdd->prepare('INSERT INTO utilisateur(id, login, password, mail, status) VALUES(?, ?, ?, ?, ?)');
-            $add->execute(array($id,$_POST['login'],$password,$_POST['mail'],0));
-            header("Location: ../index.php");
+            $mailAlreadyExist = false;
+            $loginAlreadyExist = false;
+            $getUsers = $bdd->prepare('SELECT * FROM utilisateur');
+            $getUsers->execute();
+            while(($user = $getUsers->fetch())!=0 && !$mailAlreadyExist && !$loginAlreadyExist) {
+                if ($user['mail'] == $_POST['mail']) {
+                    $mailAlreadyExist = true;
+                } else if ($user['login'] == $_POST['login']) {
+                    $loginAlreadyExist = true;
+                }
+            }
+
+            if($mailAlreadyExist){
+                echo "L'adresse mail est déjà utilisée !";
+            } else if($loginAlreadyExist){
+                echo "Le nom d'utilisateur est déjà utilisé !";
+            } else {
+                $query = "SELECT COUNT(*) as nb FROM utilisateur";
+                $result = $bdd->query($query);
+                $id = $result->fetch()['nb'] + 1;
+                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $add = $bdd->prepare('INSERT INTO utilisateur(id, login, password, mail, status) VALUES(?, ?, ?, ?, ?)');
+                $add->execute(array($id,$_POST['login'],$password,$_POST['mail'],0));
+                header("Location: ../index.php");
+            }
         } else {
             echo "Les mots de passe ne correspondent pas !";
         }
@@ -217,60 +235,51 @@ function refuseMeme($id){
     $bdd = connexbdd('pgsql:dbname=randomshit;host=localhost;port=5432', 'postgres', 'passwordbdd');
     $refuse = $bdd->prepare("UPDATE memes SET status=2 WHERE id=?");
     $refuse->execute(array($id));
-
-    $getMeme = $bdd->prepare("SELECT * FROM memes WHERE id=?");
-    $getMeme->execute(array($id));
-    $getMeme = $getMeme->fetch();
-    unlink($getMeme['link']);
-
     header("Location: viewadminpanel.php");
 }
 
 //Fonction d'acceptation d'un meme
 function acceptMeme($id){
     $bdd = connexbdd('pgsql:dbname=randomshit;host=localhost;port=5432', 'postgres', 'passwordbdd');
-    $refuse = $bdd->prepare("UPDATE memes SET status=1 WHERE id=?");
-    $refuse->execute(array($id));
-
+    $accept = $bdd->prepare("UPDATE memes SET status=1 WHERE id=?");
+    $accept->execute(array($id));
     header("Location: viewadminpanel.php");
 }
 
 //Fonction d'importation d'un meme
 function uploadMeme(){
-    echo "test";
     $target_dir = "../images/memes/";
     $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $errormsg="";
 
-// Check if image file is a actual image or fake image
+    //Verifie si le fichier est une vraie image ou non
     if(isset($_POST["submit"])) {
         $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
         if($check !== false) {
-            echo "File is an image - " . $check["mime"] . ".";
             $uploadOk = 1;
         } else {
-            echo "File is not an image.";
+            $errormsg= "File is not an image.";
             $uploadOk = 0;
         }
     }
 
-// Check if file already exists
+    //Vérifie si le fichier existe déjà ou non
     if (file_exists($target_file)) {
-        echo "Sorry, file already exists.";
+        $errormsg= "Sorry, file already exists.";
         $uploadOk = 0;
     }
 
-// Check file size
-    if ($_FILES["fileToUpload"]["size"] > 500000) {
-        echo "Sorry, your file is too large.";
+    //Vérifie la taille du fichier
+    if ($_FILES["fileToUpload"]["size"] > 2000000) {
+        $errormsg= "Sorry, your file is too large.";
         $uploadOk = 0;
     }
 
-// Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
-        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    //Autorise certains formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+        $errormsg= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         $uploadOk = 0;
     }
 
@@ -289,6 +298,8 @@ function uploadMeme(){
                 header("Location: viewadminpanel.php");
             }
         }
+    } else if($uploadOk==0){
+        echo $errormsg;
     }
 }
 
@@ -314,17 +325,17 @@ function displayIndex(){
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <form method="post" class="px-4 py-3" action="src/controller.php?function=login">
                                 <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" class="form-control" name="mail" placeholder="Entrez votre email">
+                                    <label>Adresse mail</label>
+                                    <input type="email" class="form-control" name="mail" placeholder="Entrez votre adresse mail">
                                 </div>
                                 <div class="form-group">
-                                    <label>Password</label>
+                                    <label>Mot de passe</label>
                                     <input type="password" class="form-control" name="password" placeholder="Entrez votre mot de passe">
                                 </div>
                                 <button type="submit" class="btn btn-success">Se connecter</button>
                             </form>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="src/viewregistration.php">Vous êtes nouveau ? Créez un compte!</a>
+                            <a class="dropdown-item" href="src/viewregistration.php">Vous êtes nouveau ? Créez un compte !</a>
                         </div>
                     </div>';
     }

@@ -5,7 +5,7 @@ function connexbdd($base,$user,$password){
         $bdd = new PDO($base,$user,$password);
         return $bdd;
     } catch (PDOException $exception){
-        header("Location: ../index.html");
+        header("Location: ../index.php");
         return 0;
     }
 }
@@ -23,6 +23,15 @@ if($_GET['function']=="register"){
     acceptMeme($_GET['id']);
 } if($_GET['function']=="uploadMeme"){
     uploadMeme();
+} if($_GET['function']=="logout"){
+    logout();
+} if($_GET['function']=="goToPanel"){
+    session_start();
+    if($_SESSION['userstatus']==0){
+        header("Location: viewuserpanel.php");
+    } else if($_SESSION['userstatus']==1){
+        header("Location: viewadminpanel.php");
+    }
 }
 
 //Fonction d'enregistrement de nouvel utilisateur
@@ -36,7 +45,7 @@ function register(){
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
             $add = $bdd->prepare('INSERT INTO utilisateur(id, login, password, mail, status) VALUES(?, ?, ?, ?, ?)');
             $add->execute(array($id,$_POST['login'],$password,$_POST['mail'],0));
-            header("Location: ../index.html");
+            header("Location: ../index.php");
         } else {
             echo "Les mots de passe ne correspondent pas !";
         }
@@ -61,11 +70,7 @@ function login(){
         }
 
         if($isconnected){
-            if($_SESSION['userstatus']==0){
-                header("Location: viewuserpanel.php");
-            } else if($_SESSION['userstatus']==1){
-                header("Location: viewadminpanel.php");
-            }
+            header("Location: ../index.php");
         } else  {
             echo '<br><section id="errors" class="container alert alert-danger">Email ou mot de passe incorrect.</section>';
         }
@@ -287,7 +292,49 @@ function uploadMeme(){
     }
 }
 
-//Pick random meme
-function randomPick(){
+//Fonction affichage de l'index
+function displayIndex(){
+    session_start();
+    if(isset($_SESSION['userid'])){
+        echo '<div class="btn-group">
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                        '<i class="material-icons">person</i>',
+                        '<strong> '.$_SESSION['login'].'</strong>',
+                    '</button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="src/controller.php?function=goToPanel">Panel</a>
+                        <a class="dropdown-item" href="src/controller.php?function=logout">Deconnexion</a>
+                    </div>
+            </div>';
+    } else {
+        echo '<div class="dropdown show">
+                        <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Se connecter
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                            <form method="post" class="px-4 py-3" action="src/controller.php?function=login">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" name="mail" placeholder="Entrez votre email">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" class="form-control" name="password" placeholder="Entrez votre mot de passe">
+                                </div>
+                                <button type="submit" class="btn btn-success">Se connecter</button>
+                            </form>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="src/viewregistration.php">Vous êtes nouveau ? Créez un compte!</a>
+                        </div>
+                    </div>';
+    }
 }
+
+//Fonction de deconnexion
+function logout(){
+    session_start();
+    session_destroy();
+    header("Location: ../index.php");
+}
+
 ?>

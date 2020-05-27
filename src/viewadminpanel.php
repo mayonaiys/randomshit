@@ -13,14 +13,19 @@
         <link rel="icon" href="images/icon.png">
     </head>
     <body>
-        <div class="container">
-            <br>
+        <nav class="navbar navbar-light bg-light justify-content-between">
             <?php
-                include 'controller.php';
-                session_start();
-                echo '<h3>Bienvenue <strong>'.$_SESSION['login'].'</strong></h3>';
+            include 'controller.php';
+            session_start();
+            echo '<h3 class="navbar-brand">Bienvenue <strong>'.$_SESSION['login'].'</strong></h3>';
             ?>
-            <hr>
+            <div>
+                <a class="btn btn-success" href="../index.php">Accueil</a>
+                <a class="btn btn-danger" href="controller.php?function=logout">Deconnexion</a>
+            </div>
+        </nav>
+        <br>
+        <div class="container">
             <div class="card">
                 <div class="card-header">
                     Memes en attente
